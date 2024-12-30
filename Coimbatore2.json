@@ -1,0 +1,37 @@
+{
+    "title": "Google Business Performance Report",
+    "branch": "Coimbatore Branch",
+    "month": "December 2024",
+    "total_reviews": {
+        "total_rating": 74,
+        "average_rating": 2.73,
+        "unanswered_reviews": 0,
+        "unverified_listings": 5,
+      "ratings_breakdown": {
+        "1-star": 12,
+        "2-star": 18,
+        "3-star": 45,
+        "4-star": 85,
+        "5-star": 140
+      }
+    },
+    "sentiment_analysis": {
+      "Positive": 120,
+      "Neutral": 60,
+      "Negative": 20
+    },
+    "performance": {
+      "website_clicks": 400,
+      "business_impressions": {
+        "desktop_search": 800,
+        "desktop_maps": 500,
+        "mobile_search": 1200,
+        "mobile_maps": 900
+      },
+      "business_directions": 150,
+      "call_clicks": 300,
+      "business_conversations": 220
+    },
+    "performance_trends": [100, 150, 180, 250, 300, 450, 600] 
+  }
+  

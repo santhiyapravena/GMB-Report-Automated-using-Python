@@ -54,11 +54,11 @@ def generate_enhanced_pdf(json_data, output_pdf):
 
     # Add Left Logo
     left_logo_path = "C:/Users/SANTHIYA/Downloads/eywalogo.png"  # Update with your logo path
-    c.drawImage(left_logo_path, margin-15, height - 60, width=100, height=38, mask="auto")  # Adjust size as needed
+    c.drawImage(left_logo_path, margin-15, height - 55, width=100, height=22, mask="auto")  # Adjust size as needed
 
     # Add Right Logo
     right_logo_path = "C:/Users/SANTHIYA/Downloads/bealogo.webp"  # Update with your logo path
-    c.drawImage(right_logo_path, width - margin - 50, height - 70, width=60, height=45, mask="auto")  # Adjust size as needed
+    c.drawImage(right_logo_path, width - margin - 50, height - 65, width=60, height=30, mask="auto")  # Adjust size as needed
 
     # Title Text
     c.setFont("Helvetica-Bold", 18)
@@ -98,28 +98,33 @@ def generate_enhanced_pdf(json_data, output_pdf):
     c.setFillColor(HexColor("#1F618D"))
     c.setFont("Helvetica-Bold", 10)
     c.drawCentredString((width - (box_width * 4 + 60)) / 2 + box_width / 2, box_y + 40, "Total Ratings")  # Label
-    c.setFont("Helvetica-Bold", 20)  # Set font for the value
-    c.drawCentredString((width - (box_width * 4 + 60)) / 2 + box_width / 2, box_y + 20, str(total_reviews['total_rating']))  # Value below the label
+    c.setFont("Helvetica-Bold", 18)  # Set font for the value
+     
+    # Value below the label
+    # Position for the total rating value
+    total_rating_x = (width - (box_width * 4 + 90)) / 2 + box_width / 2
+    c.drawCentredString(total_rating_x, box_y + 15, str(total_reviews['total_rating']))  # Value below the label
+
 
     # Determine the arrow direction based on the rating value
     rating_value = total_reviews['total_rating']
     arrow = "↑" if rating_value > 50 else "↓"  # Example threshold: 3
-    arrow_color = HexColor("#165f07") if rating_value > 50 else HexColor("#dc3545")  # Green for up, red for down
+    arrow_color = HexColor("#27a215") if rating_value > 50 else HexColor("#dc3545")  # Green for up, red for down
 
     # Create a small box for the arrow and percentage
     small_box_width = 40  # Width to accommodate both arrow and percentage
     small_box_height = 15
-    small_box_x = (width - (box_width * 4 + 60)) / 2 + box_width / 2 - 20  # Center the small box
-    small_box_y = box_y + 2  # Position the small box below the value
+    small_box_x = total_rating_x + 20  # Adjusted to be right of the total rating value
+    small_box_y = box_y + 14  # Position the small box below the value
 
     # Draw the small box
-    c.setFillColor(HexColor("#D6EAF8"))  # Background color for the small box
+    c.setFillColor(HexColor("#d9f9db"))  # Background color for the small box
     c.rect(small_box_x, small_box_y, small_box_width, small_box_height, fill=1, stroke=0)  # Draw the small box with a border
 
     # Draw the arrow
     c.setFont("Helvetica", 10)  # Set a larger font size for the arrow
     c.setFillColor(arrow_color)  # Set color for the arrow
-    c.drawString(small_box_x + 3, small_box_y + 4, arrow)  # Position the arrow in the small box
+    c.drawString(small_box_x + 2, small_box_y + 4, arrow)  # Position the arrow in the small box
 
     # Draw the percentage
     percentage = f"{(rating_value / 100) * 100:.1f}%"  # Calculate percentage based on a scale of 5
@@ -138,33 +143,57 @@ def generate_enhanced_pdf(json_data, output_pdf):
     c.drawCentredString((width - (box_width * 4 + 60)) / 2 + box_width + 20 + box_width / 2, box_y + 40, "Average Rating")
 
     # Draw the average rating value
-    c.setFont("Helvetica-Bold", 20)
-    c.drawCentredString((width - (box_width * 4 + 60)) / 2 + box_width + 20 + box_width / 2, box_y + 20, f"{average_rating:.1f}")
+    c.setFont("Helvetica-Bold", 18)
+    c.drawCentredString((width - (box_width * 4 + 60)) / 2 + box_width + 20 + box_width / 2, box_y + 17, f"{average_rating:.1f}")
 
     # Draw the stars below the average rating value
     star_x = (width - (box_width * 4 + 60)) / 2 + box_width + 20 + box_width / 2
-    star_y = box_y + 6  # Position the stars below the average rating value
-    c.setFont("Helvetica", 16)
+    star_y = box_y + 3.5 # Position the stars below the average rating value
+    c.setFont("Helvetica", 14)
     for i, (star, color) in enumerate(stars):
         c.setFillColor(color)  # Set the color for each star
         c.drawString(star_x + (i * 13) - (len(stars) * 6), star_y, star)  # Adjust position for each star
 
     # Box 3: Unanswered Reviews
-    draw_shadowed_box(c, (width - (box_width * 4 + 60)) / 2 + (box_width * 2) + 40, box_y, box_width, box_height, HexColor("#FDFEFE"))
+    box_y_unanswered = box_y  # Position the unanswered reviews box below the total ratings box
+    draw_shadowed_box(c, (width - (box_width * 4 + 60)) / 2 + (box_width * 2) + 40, box_y_unanswered, box_width, box_height, HexColor("#FDFEFE"))
     c.setFillColor(HexColor("#1F618D"))
     c.setFont("Helvetica-Bold", 10)
-    c.drawCentredString((width - (box_width * 4 + 60)) / 2 + (box_width * 2) + 40 + box_width / 2, box_y + 40, "Unanswered Reviews")  # Label
+    c.drawCentredString((width - (box_width * 4 + 60)) / 2 + (box_width * 2) + 40 + box_width / 2, box_y_unanswered + 40, "Unanswered Reviews")  # Label
     unanswered_reviews = total_reviews.get('unanswered_reviews', 0)  # Default to 0 if not found
-    c.setFont("Helvetica-Bold", 20)  # Set font for the value
-    c.drawCentredString((width - (box_width * 4 + 60)) / 2 + (box_width * 2) + 40 + box_width / 2, box_y + 20, str(unanswered_reviews))  # Value below the label
+    c.setFont("Helvetica-Bold", 18)  # Set font for the value
+    c.drawCentredString((width - (box_width * 4 + 90)) / 2 + (box_width * 2) + 40 + box_width / 2, box_y_unanswered + 15, str(unanswered_reviews))  # Value below the label
 
+# Determine the arrow direction based on the unanswered reviews value
+    arrow = "↑" if unanswered_reviews > 50 else "↓"  # Example threshold: 50
+    arrow_color = HexColor("#165f07") if unanswered_reviews > 50 else HexColor("#dc3545")  # Green for up, red for down
+
+# Create a small box for the arrow and percentage
+    small_box_x_unanswered = (width - (box_width * 4 + 10)) / 2 + (box_width * 2) + 40 + box_width / 2 - 20  # Center the small box
+    small_box_y_unanswered = box_y_unanswered + 14  # Position the small box below the value
+
+# Draw the small box
+    c.setFillColor(HexColor("#fde1e6"))  # Background color for the small box
+    c.rect(small_box_x_unanswered, small_box_y_unanswered, small_box_width, small_box_height, fill=1, stroke=0)  # Draw the small box with a border
+
+# Draw the arrow
+    c.setFont("Helvetica", 10)  # Set a larger font size for the arrow
+    c.setFillColor(arrow_color)  # Set color for the arrow
+    c.drawString(small_box_x_unanswered + 2, small_box_y_unanswered + 4, arrow)  # Position the arrow in the small box
+
+# Draw the percentage
+    total_reviews_count = total_reviews.get('total_rating', 1)  # Avoid division by zero
+    percentage = f"{(unanswered_reviews / total_reviews_count) * 100:.1f}%"  # Calculate percentage
+    c.setFillColor(HexColor("#154360"))  # Set text color to black
+    c.setFont("Helvetica", 8)  # Set font for the percentage
+    c.drawString(small_box_x_unanswered + 17, small_box_y_unanswered + 5, percentage)
     # Box 4: Unverified Listings
     draw_shadowed_box(c, (width - (box_width * 4 + 60)) / 2 + (box_width * 3) + 60, box_y, box_width, box_height, HexColor("#FDFEFE"))
     c.setFillColor(HexColor("#1F618D"))
     c.setFont("Helvetica-Bold", 10)
     c.drawCentredString((width - (box_width * 4 + 60)) / 2 + (box_width * 3) + 60 + box_width / 2, box_y + 40, "Unverified Listings")  # Label
     c.setFont("Helvetica-Bold", 20)  # Set font for the value
-    c.drawCentredString((width - (box_width * 4 + 60)) / 2 + (box_width * 3) + 60 + box_width / 2, box_y + 20, str(total_reviews['unverified_listings']))  # Value below the label
+    c.drawCentredString((width - (box_width * 4 + 60)) / 2 + (box_width * 3) + 60 + box_width / 2, box_y + 15, str(total_reviews['unverified_listings']))  # Value below the label
 
    # Section Title: Ratings Breakdown
     c.setFont("Helvetica-Bold", 16)
@@ -444,10 +473,7 @@ def generate_enhanced_pdf(json_data, output_pdf):
         ["Directions", performance['business_directions']],
         ["Mobile Search", performance['business_impressions']['mobile_search']],
         ["Desktop Search", performance['business_impressions']['desktop_search']],
-        ["Website Clicks", performance['website_clicks']],
-        
-       
-        
+        ["Website Clicks", performance['website_clicks']],     
        
     ]
 
@@ -482,7 +508,7 @@ def generate_enhanced_pdf(json_data, output_pdf):
         ('BOTTOMPADDING', (0, 1), (-1, -1), 5),  # Bottom padding for all cells
         ]))
     performance_table.wrapOn(c, width, height)
-    performance_table.drawOn(c, margin + 270, box_y - 570)
+    performance_table.drawOn(c, margin + 270, box_y - 580)
 
     # Footer with Page Number and Date
     c.setFont("Helvetica", 10)
